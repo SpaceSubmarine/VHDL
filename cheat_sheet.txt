@@ -1,0 +1,63 @@
+-- Comentarios se escriben con '--'
+
+-- LIBRARY DECLARATIONS: Importar las bibliotecas necesarias para el diseño
+library ieee;    -- biblioteca estándar de VHDL
+use ieee.std_logic_1164.all;    -- define el tipo de datos std_logic y sus operaciones
+use ieee.numeric_std.all;    -- define el tipo de datos signed y unsigned y sus operaciones
+
+-- ENTITY DECLARATION: Define la interfaz de la entidad, es decir, los puertos de entrada y salida
+entity my_entity is
+    port (
+        input1 : in std_logic;
+        input2 : in std_logic;
+        output1 : out std_logic;
+        output2 : out std_logic_vector(7 downto 0)
+    );
+end entity my_entity;
+
+-- ARCHITECTURE DECLARATION: Define la implementación de la entidad
+architecture my_architecture of my_entity is
+    -- COMPONENT DECLARATIONS: Definir componentes, por ejemplo, una compuerta lógica
+    component my_gate is
+        port (
+            input1 : in std_logic;
+            input2 : in std_logic;
+            output1 : out std_logic
+        );
+    end component my_gate;
+    
+    -- SIGNAL DECLARATIONS: Define señales intermedias necesarias para la implementación
+    signal my_signal : std_logic_vector(3 downto 0);
+    
+begin
+    -- COMBINATIONAL LOGIC: Implementar lógica combinacional usando operadores lógicos y aritméticos
+    output1 <= input1 and input2;
+    output2 <= std_logic_vector(unsigned(my_signal) + 1);
+    
+    -- COMPONENT INSTANTIATION: Instanciar componentes y conectar sus puertos
+    my_gate_inst : my_gate
+        port map (
+            input1 => input1,
+            input2 => input2,
+            output1 => my_signal(0)
+        );
+    
+    -- PROCESS DECLARATION: Implementar lógica secuencial utilizando procesos
+    my_process : process (input1, input2)
+    begin
+        if input1 = '1' then
+            my_signal(1) <= not input2;
+        else
+            my_signal(1) <= input2;
+        end if;
+        
+        if rising_edge(input1) then
+            my_signal(2) <= '0';
+        end if;
+        
+        if falling_edge(input2) then
+            my_signal(3) <= '1';
+        end if;
+    end process my_process;
+    
+end architecture my_architecture;
